@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,15 +16,27 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+import qulix.com.giphytestapp.functional.Factory;
+import qulix.com.giphytestapp.observables.TrendingGifs;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements GifPreviewViewHolder.ClickListener {
 
+    private final Factory<Observable<TrendingGifs.TrendingGifsResponse>> mDataFactory;
     private RecyclerView mRecyclerView;
 
     private static final GifPreview DUMMY = new GifPreview("https://upload.wikimedia.org/wikipedia/en/f/f4/Fudge_bunny_rules_disco_diva.gif", "Fudge bunny rules disco");
+
+    public MainActivity() {
+        this(() -> new TrendingGifs().trendingGifs());
+    }
+
+    public MainActivity(final Factory<Observable<TrendingGifs.TrendingGifsResponse>> dataFactory) {
+        mDataFactory = dataFactory;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +49,22 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        Observable.just(Arrays.asList(DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(gifPreviews -> {
+        mDataFactory
+            .get()
+            .map(TrendingGifs.TrendingGifsResponse::data)
+            .flatMap(entries ->
+                 Observable
+                     .<TrendingGifs.TrendingGifsResponse.GifEntry>from(entries)
+                     .map(entry -> new GifPreview(entry.caption(),
+                                                  entry.image().url())))
+            .toList()
+            .subscribe(gifPreviews -> {
                     final GifListAdapter adapter = new GifListAdapter(gifPreviews, this);
                     mRecyclerView.setAdapter(adapter);
-                });
+                },
+                error -> {
+                    Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
+                } );
     }
 
     @Override
