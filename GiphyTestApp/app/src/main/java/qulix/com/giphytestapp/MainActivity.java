@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -11,7 +12,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GifPreviewViewHolder.ClickListener {
 
     private RecyclerView mRecyclerView;
 
@@ -23,16 +24,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qulix_giphy_test);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.gifs_list);
+        mRecyclerView.setHasFixedSize(true);
+
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        Observable.just(Arrays.asList(DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY))
+        Observable.just(Arrays.asList(DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(gifPreviews -> {
-                    final GifListAdapter adapter = new GifListAdapter(gifPreviews);
+                    final GifListAdapter adapter = new GifListAdapter(gifPreviews, this);
                     mRecyclerView.setAdapter(adapter);
                 });
     }
 
+    @Override
+    public void onGifPreviewClicked(final GifPreview preview) {
+        Toast.makeText(this, preview.previewName() + " clicked", Toast.LENGTH_LONG).show();
+    }
 }

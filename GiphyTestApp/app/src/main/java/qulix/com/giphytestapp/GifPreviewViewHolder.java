@@ -1,10 +1,15 @@
 package qulix.com.giphytestapp;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
+
+    public interface ClickListener {
+        void onGifPreviewClicked(GifPreview preview);
+    }
 
     private final TextView mPositionIndex;
 
@@ -13,7 +18,11 @@ public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
         mPositionIndex = (TextView) itemView.findViewById(R.id.position_index);
     }
 
-    public void bindGif(final GifPreview gifPreview, final int position) {
+    public void bindGif(
+            @NonNull final GifPreview gifPreview,
+            final int position,
+            @NonNull final ClickListener clickListener) {
         mPositionIndex.setText(String.format("%d) %s", position, gifPreview.previewName()));
+        itemView.setOnClickListener(v -> clickListener.onGifPreviewClicked(gifPreview));
     }
 }

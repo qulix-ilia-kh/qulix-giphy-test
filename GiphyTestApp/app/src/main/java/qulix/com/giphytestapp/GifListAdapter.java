@@ -1,5 +1,6 @@
 package qulix.com.giphytestapp;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,14 @@ import java.util.List;
 
 public class GifListAdapter extends RecyclerView.Adapter<GifPreviewViewHolder> {
 
-    private List<GifPreview> dataSet;
+    private List<GifPreview> mDataSet;
+    private final GifPreviewViewHolder.ClickListener mClickListener;
 
-    public GifListAdapter(List<GifPreview> dataSet) {
-        this.dataSet = dataSet;
+    public GifListAdapter(
+            @NonNull final List<GifPreview> dataSet,
+            @NonNull final GifPreviewViewHolder.ClickListener clickListener) {
+        mDataSet = dataSet;
+        mClickListener = clickListener;
     }
 
     @Override
@@ -24,11 +29,11 @@ public class GifListAdapter extends RecyclerView.Adapter<GifPreviewViewHolder> {
 
     @Override
     public void onBindViewHolder(final GifPreviewViewHolder holder, final int position) {
-        holder.bindGif(dataSet.get(position), position);
+        holder.bindGif(mDataSet.get(position), position, mClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        return mDataSet.size();
     }
 }
