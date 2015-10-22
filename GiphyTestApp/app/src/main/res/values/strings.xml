@@ -2,5 +2,7 @@
     <string name="app_name">GiphyTestApp</string>
     <string name="share_via_sms">Share via SMS</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="main_activity_search_menu_item">Search</string>
+    <string name="search_hint">Enter search request</string>
 
 </resources>
