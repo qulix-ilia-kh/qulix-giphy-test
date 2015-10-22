@@ -1,5 +1,23 @@
 apply plugin: 'com.android.application'
 
+buildscript {
+    repositories {
+        jcenter()
+
+        mavenCentral()
+
+        maven {
+              url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "me.tatarka:gradle-retrolambda:3.2.3"
+    }
+}
+
+apply plugin: "me.tatarka.retrolambda"
+
 android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
@@ -17,6 +35,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -26,4 +49,8 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
+
+    compile "com.facebook.fresco:fresco:0.8.0+"
+    compile "com.facebook.fresco:imagepipeline-okhttp:0.8.0+"
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
 }
