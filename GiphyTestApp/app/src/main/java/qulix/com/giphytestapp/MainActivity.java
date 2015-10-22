@@ -1,5 +1,6 @@
 package qulix.com.giphytestapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
 
     @Override
     public void onGifPreviewClicked(final GifPreview preview) {
-        Toast.makeText(this, preview.previewName() + " clicked", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, DetailsActivity.class);
+        startActivity(intent);
     }
 }

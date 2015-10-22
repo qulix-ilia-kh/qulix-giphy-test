@@ -22,7 +22,8 @@ public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
             @NonNull final GifPreview gifPreview,
             final int position,
             @NonNull final ClickListener clickListener) {
-        mPositionIndex.setText(String.format("%d) %s", position, gifPreview.previewName()));
+        mPositionIndex.setText(String.format("%d)", position));
+
         itemView.setOnClickListener(v -> clickListener.onGifPreviewClicked(gifPreview));
     }
 }
