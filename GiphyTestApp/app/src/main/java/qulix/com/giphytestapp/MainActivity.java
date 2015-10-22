@@ -16,24 +16,23 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+import qulix.com.giphytestapp.api.Api;
+import qulix.com.giphytestapp.api.data.GifsResponse;
 import qulix.com.giphytestapp.functional.Factory;
-import qulix.com.giphytestapp.observables.TrendingGifs;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements GifPreviewViewHolder.ClickListener {
 
-    private final Factory<Observable<TrendingGifs.TrendingGifsResponse>> mDataFactory;
+    private final Factory<Observable<GifsResponse>> mDataFactory;
     private RecyclerView mRecyclerView;
 
     private static final GifPreview DUMMY = new GifPreview("https://upload.wikimedia.org/wikipedia/en/f/f4/Fudge_bunny_rules_disco_diva.gif", "Fudge bunny rules disco");
 
     public MainActivity() {
-        this(() -> new TrendingGifs().trendingGifs());
+        this(() -> new Api().trendingGifs());
     }
 
-    public MainActivity(final Factory<Observable<TrendingGifs.TrendingGifsResponse>> dataFactory) {
+    public MainActivity(final Factory<Observable<GifsResponse>> dataFactory) {
         mDataFactory = dataFactory;
     }
 
@@ -51,12 +50,9 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
 
         mDataFactory
             .get()
-            .map(TrendingGifs.TrendingGifsResponse::data)
-            .flatMap(entries ->
-                 Observable
-                     .<TrendingGifs.TrendingGifsResponse.GifEntry>from(entries)
-                     .map(entry -> new GifPreview(entry.caption(),
-                                                  entry.image().url())))
+            .flatMapIterable(GifsResponse::data)
+            .map(entry -> new GifPreview(entry.caption(),
+                                         entry.image().url()))
             .toList()
             .subscribe(gifPreviews -> {
                     final GifListAdapter adapter = new GifListAdapter(gifPreviews, this);
@@ -64,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
                 },
                 error -> {
                     Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
-                } );
+                });
     }
 
     @Override
