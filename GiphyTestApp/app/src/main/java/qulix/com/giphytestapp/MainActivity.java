@@ -2,11 +2,13 @@ package qulix.com.giphytestapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import java.util.Arrays;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,16 +23,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qulix_giphy_test);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.gifs_list);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-
-        Observable.just(DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY)
+        Observable.just(Arrays.asList(DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY, DUMMY))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<GifPreview>() {
-                    @Override
-                    public void call(final GifPreview gifPreview) {
-
-                    }
+                .subscribe(gifPreviews -> {
+                    final GifListAdapter adapter = new GifListAdapter(gifPreviews);
+                    mRecyclerView.setAdapter(adapter);
                 });
     }
 
