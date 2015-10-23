@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
     private static final GifPreview DUMMY = new GifPreview("https://upload.wikimedia.org/wikipedia/en/f/f4/Fudge_bunny_rules_disco_diva.gif", "Fudge bunny rules disco");
 
     public MainActivity() {
-        this(() -> new Api().trendingGifs());
+        this(() -> GiphyTestApplication.instance().api().trendingGifs());
     }
 
     public MainActivity(final Factory<Observable<GifsResponse>> dataFactory) {
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
         mDataFactory
             .get()
             .flatMapIterable(GifsResponse::data)
-            .map(entry -> new GifPreview(entry.caption(),
-                                         entry.image().url()))
+            .map(entry -> new GifPreview(entry.image().url(),
+                                         entry.caption()))
             .toList()
             .subscribe(gifPreviews -> {
                     final GifListAdapter adapter = new GifListAdapter(gifPreviews, this);

@@ -21,8 +21,8 @@ import rx.schedulers.Schedulers;
 
 public final class Api {
 
-    private static final Scheduler mIOScheduler = Schedulers.newThread();
-    private static final OkHttpClient mClient = new OkHttpClient();
+    private final Scheduler mIOScheduler = Schedulers.newThread();
+    private final OkHttpClient mClient;
 
     private static final String KEY_API_KEY = "api_key";
     // api key from the giphy samples
@@ -34,34 +34,8 @@ public final class Api {
     private static final String TRENDING_GIFS_API_ENDPOINT = "http://api.giphy.com/v1/gifs/trending";
     private static final String SEARCH_GIFS_ENDPOINT = "http://api.giphy.com/v1/gifs/search";
 
-    private static final <T> Observable<T> execute(final HttpUrl url,
-                                                   final Class<T> expectedClass) {
-        return Observable.<String>create(subscriber -> {
-                try {
-                    final String data = readFromUrl(url);
-
-                    subscriber.onNext(data);
-
-                    subscriber.onCompleted();
-                } catch (final IOException e) {
-                    subscriber.onError(e);
-                }
-            })
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map(string -> new Gson().fromJson(string, expectedClass));
-    }
-
-    private static final String readFromUrl(final HttpUrl url) throws IOException {
-        final Request request = new Request.Builder()
-            .url(url)
-            .build();
-
-        return mClient
-            .newCall(request)
-            .execute()
-            .body()
-            .string();
+    public Api(final OkHttpClient client) {
+        mClient = client;
     }
 
     public Observable<GifsResponse> trendingGifs() {
@@ -83,5 +57,35 @@ public final class Api {
             .addQueryParameter(KEY_API_KEY, VALUE_API_KEY)
             .build();
 
+    }
+
+    private final <T> Observable<T> execute(final HttpUrl url,
+                                            final Class<T> expectedClass) {
+        return Observable.<String>create(subscriber -> {
+                try {
+                    final String data = readFromUrl(url);
+
+                    subscriber.onNext(data);
+
+                    subscriber.onCompleted();
+                } catch (final IOException e) {
+                    subscriber.onError(e);
+                }
+            })
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(string -> new Gson().fromJson(string, expectedClass));
+    }
+
+    private final String readFromUrl(final HttpUrl url) throws IOException {
+        final Request request = new Request.Builder()
+            .url(url)
+            .build();
+
+        return mClient
+            .newCall(request)
+            .execute()
+            .body()
+            .string();
     }
 }

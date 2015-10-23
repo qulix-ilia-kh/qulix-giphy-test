@@ -9,10 +9,10 @@ public class GifPreview {
     private final String mPreviewName;
 
     public GifPreview(
-            @NonNull final String mPreviewUrl,
-            @NonNull final String mPreviewName) {
-        this.mPreviewUrl = mPreviewUrl;
-        this.mPreviewName = mPreviewName;
+            @NonNull final String previewUrl,
+            @NonNull final String previewName) {
+        mPreviewUrl = previewUrl;
+        mPreviewName = previewName;
     }
 
     public String previewName() {
