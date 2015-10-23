@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Subscription mCurrentSubscription;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qulix_giphy_test);
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         final MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_activity_menu, menu);
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         return GiphyTestApplication.instance().api();
     }
 
-    private void displayGifsFromObservable(Observable<GifDescription> observable) {
+    private void displayGifsFromObservable(final Observable<GifDescription> observable) {
         unsubscribeCurrent();
         mCurrentSubscription = observable
                 .toList()
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         unsubscribe(mCurrentSubscription);
     }
 
-    private void unsubscribe(Subscription subscription) {
+    private void unsubscribe(final Subscription subscription) {
         if (subscription != null) {
             subscription.unsubscribe();
         }
