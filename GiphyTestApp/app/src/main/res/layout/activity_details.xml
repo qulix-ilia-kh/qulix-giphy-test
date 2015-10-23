@@ -7,10 +7,10 @@
     android:orientation="vertical"
     tools:context="qulix.com.giphytestapp.DetailsActivity">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/detailed_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
 
     <Button android:id="@+id/share_via_sms"
             android:layout_width="wrap_content"

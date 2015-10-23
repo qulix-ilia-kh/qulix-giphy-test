@@ -12,6 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.data.GifDescription;
+import qulix.com.giphytestapp.ui.UiUtils;
 
 public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
 
@@ -40,13 +41,6 @@ public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
                            final GifDescription gif) {
         final SimpleDraweeView image = (SimpleDraweeView)itemView.findViewById(R.id.image);
 
-        final Uri uri = Uri.parse(gif.url());
-
-        final DraweeController controller = Fresco.newDraweeControllerBuilder()
-            .setUri(uri)
-            .setAutoPlayAnimations(true)
-            .build();
-
-        image.setController(controller);
+        image.setController(UiUtils.fromGifDescription(gif));
     }
 }

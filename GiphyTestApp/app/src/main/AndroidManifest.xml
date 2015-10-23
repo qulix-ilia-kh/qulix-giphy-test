@@ -25,8 +25,8 @@
                        android:resource="@xml/searchable"/>
 
         </activity>
-        <activity android:name=".DetailsActivity">
-        </activity>
+        <activity android:name=".ui.screens.DetailsActivity"/>
+
     </application>
 
 </manifest>

@@ -77,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSelected(final GifDescription preview) {
-        Intent intent = new Intent(this, DetailsActivity.class);
-        startActivity(intent);
+        startActivity(DetailsActivity.intent(this, preview));
     }
 
     @Override
