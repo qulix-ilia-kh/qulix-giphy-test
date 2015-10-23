@@ -3,7 +3,6 @@ package qulix.com.giphytestapp.ui.list;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -17,27 +16,17 @@ public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
         void onClicked(GifDescription preview);
     }
 
-    private final TextView mPositionIndex;
+    final SimpleDraweeView mImage;
 
     public GifPreviewViewHolder(final View itemView) {
         super(itemView);
-        mPositionIndex = (TextView) itemView.findViewById(R.id.position_index);
+        mImage = (SimpleDraweeView) itemView.findViewById(R.id.image);
     }
 
     public void bindGif(@NonNull final GifDescription gifPreview,
-                        final int position,
                         @NonNull final ClickListener clickListener) {
-        mPositionIndex.setText(String.format("%d)", position));
-
-        initImage(itemView, gifPreview);
+        mImage.setController(UiUtils.fromGifDescription(gifPreview));
 
         itemView.setOnClickListener(v -> clickListener.onClicked(gifPreview));
-    }
-
-    private void initImage(final View item,
-                           final GifDescription gif) {
-        final SimpleDraweeView image = (SimpleDraweeView)itemView.findViewById(R.id.image);
-
-        image.setController(UiUtils.fromGifDescription(gif));
     }
 }

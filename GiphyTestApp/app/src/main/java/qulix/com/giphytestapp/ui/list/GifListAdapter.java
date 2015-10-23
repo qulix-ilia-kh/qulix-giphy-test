@@ -32,7 +32,7 @@ public class GifListAdapter extends RecyclerView.Adapter<GifPreviewViewHolder> {
 
     @Override
     public void onBindViewHolder(final GifPreviewViewHolder holder, final int position) {
-        holder.bindGif(mDataSet.get(position), position, mClickListener);
+        holder.bindGif(mDataSet.get(position), mClickListener);
     }
 
     @Override

@@ -18,10 +18,6 @@ import qulix.com.giphytestapp.ui.UiUtils;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    private SimpleDraweeView mImage;
-    private View mShareViaSMS;
-    private View mCopyToClipboard;
-
     private static final String GIF_DESCRIPTION_EXTRA = "gif_description_extra.da550ac1-744a-4e13-8f61-0e38a75ea16f";
 
     public static Intent intent(final Context context,
@@ -38,25 +34,25 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        mImage = (SimpleDraweeView) findViewById(R.id.detailed_image);
-        mShareViaSMS = findViewById(R.id.share_via_sms);
-        mCopyToClipboard = findViewById(R.id.copy_to_clipboard);
+        final SimpleDraweeView image = (SimpleDraweeView) findViewById(R.id.detailed_image);
+        final View shareViaSMS = findViewById(R.id.share_via_sms);
+        final View copyToClipboard = findViewById(R.id.copy_to_clipboard);
 
         final Intent intent = getIntent();
 
         if (intent != null) {
-            final GifDescription gif = (GifDescription)intent.getSerializableExtra(GIF_DESCRIPTION_EXTRA);
+            final GifDescription gif = (GifDescription) intent.getSerializableExtra(GIF_DESCRIPTION_EXTRA);
 
             if (gif != null) {
-                mImage.setController(UiUtils.fromGifDescription(gif));
+                image.setController(UiUtils.fromGifDescription(gif));
 
-                mShareViaSMS.setOnClickListener(view ->
-                                                Sharing.shareViaSms(this,
-                                                        gif));
+                shareViaSMS.setOnClickListener(view ->
+                                                       Sharing.shareViaSms(this,
+                                                                           gif));
 
-                mCopyToClipboard.setOnClickListener(view ->
-                                                    Sharing.copyToClipBoard(this,
-                                                                            gif));
+                copyToClipboard.setOnClickListener(view ->
+                                                           Sharing.copyToClipBoard(this,
+                                                                                   gif));
             }
         }
     }
