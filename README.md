@@ -23,9 +23,9 @@ JAVA8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_66.jdk/Contents/Home
 ---
 Running
 
-1) Launch android studio
-2) Import project from sources
-3) sync project with gradle files
-4) enable USB debugging on device and conenct it to computer
-5) run the application build.
-6) select target device on device chooser
+1. Launch android studio
+2. Import project from sources
+3. sync project with gradle files
+4. enable USB debugging on device and conenct it to computer
+5. run the application build.
+6. select target device on device chooser
