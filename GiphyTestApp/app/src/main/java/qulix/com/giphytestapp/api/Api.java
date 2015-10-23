@@ -83,7 +83,7 @@ public final class Api {
                     subscriber.onError(e);
                 }
             })
-            .subscribeOn(Schedulers.newThread())
+            .subscribeOn(mIOScheduler)
             .observeOn(AndroidSchedulers.mainThread())
             .map(string -> new Gson().fromJson(string, expectedClass));
     }
