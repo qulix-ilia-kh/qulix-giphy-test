@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
 
 public final class Api {
 
-    private final Scheduler mIOScheduler = Schedulers.newThread();
+    private final Scheduler mIOScheduler = Schedulers.io();
     private final OkHttpClient mClient;
 
     private static final String KEY_API_KEY = "api_key";
