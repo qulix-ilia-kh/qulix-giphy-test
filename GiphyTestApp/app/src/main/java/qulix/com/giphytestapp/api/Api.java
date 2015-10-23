@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import qulix.com.giphytestapp.api.data.GifsResponse;
+import qulix.com.giphytestapp.data.GifDescription;
 import rx.Observable;
 import rx.Observer;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public final class Api {
@@ -38,16 +40,25 @@ public final class Api {
         mClient = client;
     }
 
-    public Observable<GifsResponse> trendingGifs() {
-        return execute(url(TRENDING_GIFS_API_ENDPOINT), GifsResponse.class);
+    public Observable<GifDescription> trendingGifs() {
+        return execute(url(TRENDING_GIFS_API_ENDPOINT),
+                       GifsResponse.class)
+            .flatMap(Api::toDescriptions);
     }
 
-    public Observable<GifsResponse> search(final String term) {
+    public Observable<GifDescription> search(final String term) {
         return execute(url(SEARCH_GIFS_ENDPOINT)
                        .newBuilder()
                        .addQueryParameter(KEY_QUERY, term)
                        .build(),
-                       GifsResponse.class);
+                       GifsResponse.class)
+            .flatMap(Api::toDescriptions);
+    }
+
+    private static Observable<GifDescription> toDescriptions(final GifsResponse response) {
+        return Observable
+            .from(response.data())
+            .map(entry -> new GifDescription(entry.image().url()));
     }
 
     private HttpUrl url(final String s) {

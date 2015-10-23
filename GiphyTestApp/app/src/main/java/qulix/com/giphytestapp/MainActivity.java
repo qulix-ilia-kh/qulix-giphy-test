@@ -18,12 +18,13 @@ import java.util.Arrays;
 
 import qulix.com.giphytestapp.api.Api;
 import qulix.com.giphytestapp.api.data.GifsResponse;
+import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.functional.Factory;
 import rx.Observable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final Factory<Observable<GifsResponse>> mDataFactory;
+    private final Factory<Observable<GifDescription>> mDataFactory;
     private RecyclerView mRecyclerView;
 
     private static final GifPreview DUMMY = new GifPreview("https://upload.wikimedia.org/wikipedia/en/f/f4/Fudge_bunny_rules_disco_diva.gif", "Fudge bunny rules disco");
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         this(() -> GiphyTestApplication.instance().api().trendingGifs());
     }
 
-    public MainActivity(final Factory<Observable<GifsResponse>> dataFactory) {
+    public MainActivity(final Factory<Observable<GifDescription>> dataFactory) {
         mDataFactory = dataFactory;
     }
 
@@ -50,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDataFactory
             .get()
-            .flatMapIterable(GifsResponse::data)
-            .map(entry -> new GifPreview(entry.image().url(),
-                                         entry.caption()))
+            .map(entry -> new GifPreview(entry.url(), "TODO"))
             .toList()
             .subscribe(gifPreviews -> {
                     final GifListAdapter adapter = new GifListAdapter(gifPreviews,

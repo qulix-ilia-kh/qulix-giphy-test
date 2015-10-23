@@ -1,43 +1,24 @@
 package qulix.com.giphytestapp.data;
 
-public final class GifDescription {
-    public GifDescription(final String caption) {
-        mCaption = caption;
+import java.io.Serializable;
 
+public final class GifDescription implements Serializable {
+
+    public GifDescription(final String url) {
+        if (url == null) throw new NullPointerException("url");
+
+        mUrl = url;
     }
 
-    public String caption() {
-        return mCaption;
+    public String url() {
+        return mUrl;
     }
 
-
-    private final String mCaption;
-
+    private final String mUrl;
 
     @Override public String toString() {
         return "GifDescription{" +
-            "mCaption = " + mCaption +
+            "mUrl = " + mUrl +
             "}";
-    }
-
-    public static final class Builder {
-
-        private String mCaption;
-
-
-        public Builder() {}
-        public Builder(final GifDescription originalObject) {
-            mCaption = originalObject.mCaption;
-
-        }
-
-        public Builder setCaption(final String caption) {
-            mCaption = caption;
-            return this;
-        }
-
-        public GifDescription build() {
-            return new GifDescription(mCaption);
-        }
     }
 }
