@@ -16,6 +16,7 @@ import java.util.List;
 
 import qulix.com.giphytestapp.GiphyTestApplication;
 import qulix.com.giphytestapp.R;
+import qulix.com.giphytestapp.api.Api;
 import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.ui.list.GifListAdapter;
 import rx.Observable;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(final String newText) {
-                if (newText == null || newText.isEmpty()) {
+                if (isEmpty(newText)) {
                     displayTrendingGifs();
                 } else {
                     displaySearchedGifs(newText);
@@ -79,11 +80,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         searchView.setQuery(mQueryString, false);
-        if (!mQueryString.isEmpty()) {
+        if (!isEmpty(mQueryString)) {
             searchView.setIconified(false);
         }
 
         return true;
+    }
+
+    private boolean isEmpty(final String newText) {
+        return newText == null || newText.isEmpty();
     }
 
     @Override
@@ -94,12 +99,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayTrendingGifs() {
         mQueryString = "";
-        displayGifsFromObservable(GiphyTestApplication.instance().api().trendingGifs());
+        displayGifsFromObservable(giphyApi().trendingGifs());
     }
 
     private void displaySearchedGifs(final String newText) {
         mQueryString = newText;
-        displayGifsFromObservable(GiphyTestApplication.instance().api().search(mQueryString));
+        displayGifsFromObservable(giphyApi().search(mQueryString));
+    }
+
+    private Api giphyApi() {
+        return GiphyTestApplication.instance().api();
     }
 
     private void displayGifsFromObservable(Observable<GifDescription> observable) {
