@@ -18,6 +18,7 @@ import qulix.com.giphytestapp.GiphyTestApplication;
 import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.ui.list.GifListAdapter;
+import rx.Observable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,10 +37,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 
-        GiphyTestApplication.instance().api().trendingGifs()
-            .toList()
-            .subscribe(this::updateDataSet,
-                       this::notifyRequestError);
+        displayTrendingGifs();
     }
 
     private void updateDataSet(final List<GifDescription> gifPreviews) {
@@ -65,10 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(final String newText) {
-                GiphyTestApplication.instance().api().search(newText)
-                        .toList()
-                        .subscribe(MainActivity.this::updateDataSet,
-                                   MainActivity.this::notifyRequestError);
+                if (newText == null || newText.isEmpty()) {
+                    displayTrendingGifs();
+                } else {
+                    displaySearchedGifs(newText);
+                }
                 return true;
             }
         });
@@ -76,7 +75,24 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void notifyRequestError(final Throwable error) {Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();}
+    private void displayTrendingGifs() {
+        displayGifsFromObservable(GiphyTestApplication.instance().api().trendingGifs());
+    }
+
+    private void displaySearchedGifs(final String newText) {
+        displayGifsFromObservable(GiphyTestApplication.instance().api().search(newText));
+    }
+
+    private void displayGifsFromObservable(Observable<GifDescription> observable) {
+        observable
+                .toList()
+                .subscribe(MainActivity.this::updateDataSet,
+                           MainActivity.this::notifyRequestError);
+    }
+
+    private void notifyRequestError(final Throwable error) {
+        Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
+    }
 
     private void onSelected(final GifDescription preview) {
         startActivity(DetailsActivity.intent(this, preview));
