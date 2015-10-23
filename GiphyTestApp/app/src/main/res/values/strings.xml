@@ -4,5 +4,6 @@
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="main_activity_search_menu_item">Search</string>
     <string name="search_hint">Enter search request</string>
-
+    <string name="share_sms_prefix">Take a look:</string>
+    <string name="clipboard_text_description">giphy url</string>
 </resources>

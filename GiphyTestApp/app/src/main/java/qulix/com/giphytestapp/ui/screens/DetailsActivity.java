@@ -2,6 +2,7 @@ package qulix.com.giphytestapp.ui.screens;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.data.GifDescription;
+import qulix.com.giphytestapp.sharing.Sharing;
 import qulix.com.giphytestapp.ui.UiUtils;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -40,10 +42,6 @@ public class DetailsActivity extends AppCompatActivity {
         mShareViaSMS = findViewById(R.id.share_via_sms);
         mCopyToClipboard = findViewById(R.id.copy_to_clipboard);
 
-        mShareViaSMS.setOnClickListener(view -> shareViewSMS());
-        mCopyToClipboard.setOnClickListener(view -> copyToClipboard());
-
-
         final Intent intent = getIntent();
 
         if (intent != null) {
@@ -51,15 +49,16 @@ public class DetailsActivity extends AppCompatActivity {
 
             if (gif != null) {
                 mImage.setController(UiUtils.fromGifDescription(gif));
+
+                mShareViaSMS.setOnClickListener(view ->
+                                                Sharing.shareViaSms(this,
+                                                        gif));
+
+                mCopyToClipboard.setOnClickListener(view ->
+                                                    Sharing.copyToClipBoard(this,
+                                                                            gif));
             }
         }
     }
 
-    private void copyToClipboard() {
-        Toast.makeText(this, getString(R.string.copy_to_clipboard), Toast.LENGTH_LONG).show();
-    }
-
-    private void shareViewSMS() {
-        Toast.makeText(this, getString(R.string.share_via_sms), Toast.LENGTH_LONG).show();
-    }
 }
