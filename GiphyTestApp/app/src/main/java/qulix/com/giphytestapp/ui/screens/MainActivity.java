@@ -22,8 +22,11 @@ import rx.Observable;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String QUERY_KEY = "query key";
+
     private final List<GifDescription> mDataSet = new ArrayList<>();
     private final GifListAdapter mAdapter = new GifListAdapter(mDataSet, this::onSelected);
+    private String mQueryString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 
-        displayTrendingGifs();
+        if (savedInstanceState == null) {
+            displayTrendingGifs();
+        } else {
+            mQueryString = savedInstanceState.getString(QUERY_KEY, "");
+        }
     }
 
     private void updateDataSet(final List<GifDescription> gifPreviews) {
@@ -71,16 +78,28 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        searchView.setQuery(mQueryString, false);
+        if (!mQueryString.isEmpty()) {
+            searchView.setIconified(false);
+        }
 
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(QUERY_KEY, mQueryString);
+    }
+
     private void displayTrendingGifs() {
+        mQueryString = "";
         displayGifsFromObservable(GiphyTestApplication.instance().api().trendingGifs());
     }
 
     private void displaySearchedGifs(final String newText) {
-        displayGifsFromObservable(GiphyTestApplication.instance().api().search(newText));
+        mQueryString = newText;
+        displayGifsFromObservable(GiphyTestApplication.instance().api().search(mQueryString));
     }
 
     private void displayGifsFromObservable(Observable<GifDescription> observable) {
