@@ -2,65 +2,50 @@ package qulix.com.giphytestapp.ui.screens;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import qulix.com.giphytestapp.GiphyTestApplication;
 import qulix.com.giphytestapp.R;
-import qulix.com.giphytestapp.api.Api;
-import qulix.com.giphytestapp.api.data.GifsResponse;
 import qulix.com.giphytestapp.data.GifDescription;
-import qulix.com.giphytestapp.functional.Factory;
 import qulix.com.giphytestapp.ui.list.GifListAdapter;
-import rx.Observable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final Factory<Observable<GifDescription>> mDataFactory;
-    private RecyclerView mRecyclerView;
-
-    public MainActivity() {
-        this(() -> GiphyTestApplication.instance().api().trendingGifs());
-    }
-
-    public MainActivity(final Factory<Observable<GifDescription>> dataFactory) {
-        mDataFactory = dataFactory;
-    }
-
+    private final List<GifDescription> mDataSet = new ArrayList<>();
+    private final GifListAdapter mAdapter = new GifListAdapter(mDataSet, this::onSelected);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qulix_giphy_test);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.gifs_list);
-        mRecyclerView.setHasFixedSize(true);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gifs_list);
+        recyclerView.setHasFixedSize(true);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter);
 
-        mDataFactory
-            .get()
+        GiphyTestApplication.instance().api().trendingGifs()
             .toList()
-            .subscribe(gifPreviews -> {
-                    final GifListAdapter adapter = new GifListAdapter(gifPreviews,
-                                                                      this::onSelected);
-                    mRecyclerView.setAdapter(adapter);
-                },
-                error -> {
-                    Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
-                });
+            .subscribe(this::updateDataSet,
+                       this::notifyRequestError);
+    }
+
+    private void updateDataSet(final List<GifDescription> gifPreviews) {
+        mDataSet.clear();
+        mDataSet.addAll(gifPreviews);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -72,24 +57,29 @@ public class MainActivity extends AppCompatActivity {
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(final String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String newText) {
+                GiphyTestApplication.instance().api().search(newText)
+                        .toList()
+                        .subscribe(MainActivity.this::updateDataSet,
+                                   MainActivity.this::notifyRequestError);
+                return true;
+            }
+        });
 
         return true;
     }
 
+    private void notifyRequestError(final Throwable error) {Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();}
+
     private void onSelected(final GifDescription preview) {
         startActivity(DetailsActivity.intent(this, preview));
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this, query, Toast.LENGTH_LONG).show();
-        }
     }
 
 }
