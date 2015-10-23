@@ -20,6 +20,7 @@ import qulix.com.giphytestapp.api.Api;
 import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.ui.list.GifListAdapter;
 import rx.Observable;
+import rx.Subscription;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private final List<GifDescription> mDataSet = new ArrayList<>();
     private final GifListAdapter mAdapter = new GifListAdapter(mDataSet, this::onSelected);
     private String mQueryString;
+    private Subscription mCurrentSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
         outState.putString(QUERY_KEY, mQueryString);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unsubscribeCurrent();
+    }
+
     private void displayTrendingGifs() {
         mQueryString = "";
         displayGifsFromObservable(giphyApi().trendingGifs());
@@ -112,10 +120,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayGifsFromObservable(Observable<GifDescription> observable) {
-        observable
+        unsubscribeCurrent();
+        mCurrentSubscription = observable
                 .toList()
                 .subscribe(MainActivity.this::updateDataSet,
                            MainActivity.this::notifyRequestError);
+    }
+
+    private void unsubscribeCurrent() {
+        unsubscribe(mCurrentSubscription);
+    }
+
+    private void unsubscribe(Subscription subscription) {
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 
     private void notifyRequestError(final Throwable error) {
