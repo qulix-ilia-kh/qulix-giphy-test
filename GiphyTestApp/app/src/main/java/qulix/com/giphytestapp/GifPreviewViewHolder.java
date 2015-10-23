@@ -21,13 +21,11 @@ public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
     public GifPreviewViewHolder(final View itemView) {
         super(itemView);
         mPositionIndex = (TextView) itemView.findViewById(R.id.position_index);
-
     }
 
-    public void bindGif(
-            @NonNull final GifPreview gifPreview,
-            final int position,
-            @NonNull final ClickListener clickListener) {
+    public void bindGif(@NonNull final GifPreview gifPreview,
+                        final int position,
+                        @NonNull final ClickListener clickListener) {
         mPositionIndex.setText(String.format("%d)", position));
 
         initImage(itemView, gifPreview);

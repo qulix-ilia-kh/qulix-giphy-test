@@ -21,7 +21,7 @@ import qulix.com.giphytestapp.api.data.GifsResponse;
 import qulix.com.giphytestapp.functional.Factory;
 import rx.Observable;
 
-public class MainActivity extends AppCompatActivity implements GifPreviewViewHolder.ClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private final Factory<Observable<GifsResponse>> mDataFactory;
     private RecyclerView mRecyclerView;
@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
                                          entry.caption()))
             .toList()
             .subscribe(gifPreviews -> {
-                    final GifListAdapter adapter = new GifListAdapter(gifPreviews, this);
+                    final GifListAdapter adapter = new GifListAdapter(gifPreviews,
+                                                                      this::onGifPreviewClicked);
                     mRecyclerView.setAdapter(adapter);
                 },
                 error -> {
@@ -76,8 +77,7 @@ public class MainActivity extends AppCompatActivity implements GifPreviewViewHol
         return true;
     }
 
-    @Override
-    public void onGifPreviewClicked(final GifPreview preview) {
+    private void onGifPreviewClicked(final GifPreview preview) {
         Intent intent = new Intent(this, DetailsActivity.class);
         startActivity(intent);
     }
