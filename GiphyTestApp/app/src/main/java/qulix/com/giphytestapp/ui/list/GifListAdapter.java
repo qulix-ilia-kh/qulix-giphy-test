@@ -13,7 +13,7 @@ import qulix.com.giphytestapp.data.GifDescription;
 
 public class GifListAdapter extends RecyclerView.Adapter<GifPreviewViewHolder> {
 
-    private List<GifDescription> mDataSet;
+    private final List<GifDescription> mDataSet;
     private final GifPreviewViewHolder.ClickListener mClickListener;
 
     public GifListAdapter(
