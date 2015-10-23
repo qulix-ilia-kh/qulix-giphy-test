@@ -23,15 +23,10 @@ public final class GifsResponse {
             }
         }
 
-        public String caption() {
-            return caption;
-        }
-
         public GifImage image() {
             return images.original();
         }
 
-        private String caption;
         private GifImages images;
 
     }

@@ -1,10 +1,12 @@
-package qulix.com.giphytestapp;
+package qulix.com.giphytestapp.ui.screens;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import qulix.com.giphytestapp.R;
 
 public class DetailsActivity extends AppCompatActivity {
 

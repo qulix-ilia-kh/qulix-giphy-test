@@ -1,4 +1,4 @@
-package qulix.com.giphytestapp;
+package qulix.com.giphytestapp.ui.list;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -10,10 +10,13 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import qulix.com.giphytestapp.R;
+import qulix.com.giphytestapp.data.GifDescription;
+
 public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
 
     public interface ClickListener {
-        void onGifPreviewClicked(GifPreview preview);
+        void onClicked(GifDescription preview);
     }
 
     private final TextView mPositionIndex;
@@ -23,21 +26,21 @@ public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
         mPositionIndex = (TextView) itemView.findViewById(R.id.position_index);
     }
 
-    public void bindGif(@NonNull final GifPreview gifPreview,
+    public void bindGif(@NonNull final GifDescription gifPreview,
                         final int position,
                         @NonNull final ClickListener clickListener) {
         mPositionIndex.setText(String.format("%d)", position));
 
         initImage(itemView, gifPreview);
 
-        itemView.setOnClickListener(v -> clickListener.onGifPreviewClicked(gifPreview));
+        itemView.setOnClickListener(v -> clickListener.onClicked(gifPreview));
     }
 
     private void initImage(final View item,
-                           final GifPreview gif) {
+                           final GifDescription gif) {
         final SimpleDraweeView image = (SimpleDraweeView)itemView.findViewById(R.id.image);
 
-        final Uri uri = Uri.parse(gif.previewUrl());
+        final Uri uri = Uri.parse(gif.url());
 
         final DraweeController controller = Fresco.newDraweeControllerBuilder()
             .setUri(uri)

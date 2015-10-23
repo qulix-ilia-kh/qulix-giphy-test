@@ -1,4 +1,4 @@
-package qulix.com.giphytestapp;
+package qulix.com.giphytestapp.ui.screens;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -16,18 +16,19 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+import qulix.com.giphytestapp.GiphyTestApplication;
+import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.api.Api;
 import qulix.com.giphytestapp.api.data.GifsResponse;
 import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.functional.Factory;
+import qulix.com.giphytestapp.ui.list.GifListAdapter;
 import rx.Observable;
 
 public class MainActivity extends AppCompatActivity {
 
     private final Factory<Observable<GifDescription>> mDataFactory;
     private RecyclerView mRecyclerView;
-
-    private static final GifPreview DUMMY = new GifPreview("https://upload.wikimedia.org/wikipedia/en/f/f4/Fudge_bunny_rules_disco_diva.gif", "Fudge bunny rules disco");
 
     public MainActivity() {
         this(() -> GiphyTestApplication.instance().api().trendingGifs());
@@ -51,11 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
         mDataFactory
             .get()
-            .map(entry -> new GifPreview(entry.url(), "TODO"))
             .toList()
             .subscribe(gifPreviews -> {
                     final GifListAdapter adapter = new GifListAdapter(gifPreviews,
-                                                                      this::onGifPreviewClicked);
+                                                                      this::onSelected);
                     mRecyclerView.setAdapter(adapter);
                 },
                 error -> {
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void onGifPreviewClicked(final GifPreview preview) {
+    private void onSelected(final GifDescription preview) {
         Intent intent = new Intent(this, DetailsActivity.class);
         startActivity(intent);
     }
