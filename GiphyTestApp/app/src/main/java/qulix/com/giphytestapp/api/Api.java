@@ -31,6 +31,9 @@ public final class Api {
     private static final String VALUE_API_KEY = "dc6zaTOxFJmzC";
 
     private static final String KEY_QUERY = "q";
+    private static final String KEY_LIMIT = "limit";
+
+    private static final int SEARCH_RESULTS_TO_REQUEST = 50;
 
 
     private static final String TRENDING_GIFS_API_ENDPOINT = "http://api.giphy.com/v1/gifs/trending";
@@ -50,6 +53,7 @@ public final class Api {
         return execute(url(SEARCH_GIFS_ENDPOINT)
                        .newBuilder()
                        .addQueryParameter(KEY_QUERY, term)
+                       .addQueryParameter(KEY_LIMIT, Integer.toString(SEARCH_RESULTS_TO_REQUEST))
                        .build(),
                        GifsResponse.class)
             .flatMap(Api::toDescriptions);
