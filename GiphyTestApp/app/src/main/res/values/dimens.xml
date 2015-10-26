@@ -1,4 +1,7 @@
 <resources>
 
+  <dimen name="list_gif_slot_size">200dp</dimen>
+
+  <dimen name="details_gif_slot_size">400dp</dimen>
 
 </resources>
