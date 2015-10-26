@@ -104,12 +104,9 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
     }
 
     private void unsubscribeCurrent() {
-        unsubscribe(mCurrentSubscription);
-    }
-
-    private void unsubscribe(final Subscription subscription) {
-        if (subscription != null) {
-            subscription.unsubscribe();
+        if (mCurrentSubscription != null) {
+            mCurrentSubscription.unsubscribe();
+            mCurrentSubscription = null;
         }
     }
 
