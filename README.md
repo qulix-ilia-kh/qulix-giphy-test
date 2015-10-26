@@ -1,6 +1,15 @@
 # qulix-giphy-test
 Test application of interaction with Giphy
 
+Comments:
+
+1. As there is no requirements regarding order in which images must be
+loadded, this decision was left to the fresco library.
+
+2. As there is no requirements regarding 'load more' or paging
+functionality in search, we load only one page of 50 results in search
+list.
+
 ---
 Setting Up
 
