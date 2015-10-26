@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.data.GifDescription;
@@ -16,12 +17,11 @@ import qulix.com.giphytestapp.data.GifDescription;
  */
 public final class GifListAdapter extends RecyclerView.Adapter<GifPreviewViewHolder> {
 
-    private final List<GifDescription> mDataSet;
+    private final List<GifDescription> mDataSet = new ArrayList<GifDescription>();
     private final GifPreviewViewHolder.ClickListener mClickListener;
 
-    public GifListAdapter(@NonNull final List<GifDescription> dataSet,
-                          @NonNull final GifPreviewViewHolder.ClickListener clickListener) {
-        mDataSet = dataSet;
+    public GifListAdapter(@NonNull final GifPreviewViewHolder.ClickListener clickListener) {
+
         mClickListener = clickListener;
     }
 
@@ -48,5 +48,13 @@ public final class GifListAdapter extends RecyclerView.Adapter<GifPreviewViewHol
     @Override
     public int getItemCount() {
         return mDataSet.size();
+    }
+
+    // update data represented by this adapter
+    public void updateData(final List<GifDescription> newData) {
+        mDataSet.clear();
+        mDataSet.addAll(newData);
+
+        notifyDataSetChanged();
     }
 }

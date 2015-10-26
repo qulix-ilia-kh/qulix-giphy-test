@@ -24,8 +24,7 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
 
     private static final String STORED_QUERY_KEY = "stored query key";
 
-    private final List<GifDescription> mDataSet = new ArrayList<>();
-    private final GifListAdapter mAdapter = new GifListAdapter(mDataSet, this::onSelected);
+    private final GifListAdapter mAdapter = new GifListAdapter(this::onSelected);
 
     private Subscription mCurrentSubscription;
     private String mQuery = "";
@@ -97,10 +96,11 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
 
     protected final void displayGifsFromObservable(final Observable<GifDescription> observable) {
         unsubscribeCurrent();
-        mCurrentSubscription = observable
-                .toList()
-                .subscribe(SearchBaseActivity.this::updateDataSet,
-                           SearchBaseActivity.this::notifyRequestError);
+        mCurrentSubscription
+            = observable
+            .toList()
+            .subscribe(mAdapter::updateData,
+                       this::notifyRequestError);
     }
 
     private void unsubscribeCurrent() {
@@ -116,11 +116,5 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
 
     private void onSelected(final GifDescription preview) {
         startActivity(DetailsActivity.intent(this, preview));
-    }
-
-    private void updateDataSet(final List<GifDescription> gifPreviews) {
-        mDataSet.clear();
-        mDataSet.addAll(gifPreviews);
-        mAdapter.notifyDataSetChanged();
     }
 }
