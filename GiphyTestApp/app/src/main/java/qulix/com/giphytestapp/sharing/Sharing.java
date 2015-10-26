@@ -9,6 +9,11 @@ import android.net.Uri;
 import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.data.GifDescription;
 
+/**
+ * This is helper class, that contains methods to perform sharing.
+ *
+ * As methods are very simple, they placed in one class
+ */
 public final class Sharing {
     private static final String SMS_PROTOCOL = "sms:";
     private static final String SMS_BODY_KEY = "sms_body";

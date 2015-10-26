@@ -24,23 +24,23 @@ public class SearchResultActivity extends SearchBaseActivity {
     }
 
     private void handleIntent(final Intent intent) {
-        if (intent != null) {
-            final String query = intent.getStringExtra(QUERY_KEY);
+        if (intent == null) return;
 
-            if (query != null) {
-                displayGifsFromObservable(giphyApi().search(query));
-                final ActionBar actionBar = getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setTitle(query);
-                }
-            }
+        final String query = intent.getStringExtra(QUERY_KEY);
+        if (query == null) return;
+
+        displayGifsFromObservable(giphyApi().search(query));
+
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(query);
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
 
         if (id == android.R.id.home) {
             onBackPressed();

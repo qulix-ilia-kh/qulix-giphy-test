@@ -3,6 +3,9 @@ package qulix.com.giphytestapp.api.data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents response from server
+ */
 public final class GifsResponse {
 
     public static final class GifEntry {
@@ -31,9 +34,11 @@ public final class GifsResponse {
 
     }
 
+    // images
     private List<GifEntry> data;
 
     public List<GifEntry> data() {
+        // copy to avoid mutability
         return new ArrayList<>(data);
     }
 }

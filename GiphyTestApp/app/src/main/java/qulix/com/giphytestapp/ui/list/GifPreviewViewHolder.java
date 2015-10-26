@@ -10,16 +10,20 @@ import qulix.com.giphytestapp.R;
 import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.ui.UiUtils;
 
+/**
+ * View holder to represent list item view
+ */
 public class GifPreviewViewHolder extends RecyclerView.ViewHolder {
 
     public interface ClickListener {
         void onClicked(GifDescription preview);
     }
 
-    final SimpleDraweeView mImage;
+    private final SimpleDraweeView mImage;
 
     public GifPreviewViewHolder(final View itemView) {
         super(itemView);
+
         mImage = (SimpleDraweeView) itemView.findViewById(R.id.image);
     }
 

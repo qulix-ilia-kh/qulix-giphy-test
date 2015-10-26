@@ -15,7 +15,7 @@ import qulix.com.giphytestapp.data.GifDescription;
 import qulix.com.giphytestapp.sharing.Sharing;
 import qulix.com.giphytestapp.ui.UiUtils;
 
-public class DetailsActivity extends AppCompatActivity {
+public final class DetailsActivity extends AppCompatActivity {
 
     private static final String GIF_DESCRIPTION_EXTRA = "gif_description_extra.da550ac1-744a-4e13-8f61-0e38a75ea16f";
 
@@ -33,10 +33,6 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        final SimpleDraweeView image = (SimpleDraweeView) findViewById(R.id.detailed_image);
-        final View shareViaSMS = findViewById(R.id.share_via_sms);
-        final View copyToClipboard = findViewById(R.id.copy_to_clipboard);
-
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -44,26 +40,33 @@ public class DetailsActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
 
-        if (intent != null) {
-            final GifDescription gif = (GifDescription) intent.getSerializableExtra(GIF_DESCRIPTION_EXTRA);
+        if (intent == null) return;
 
-            if (gif != null) {
-                image.setController(UiUtils.fromGifDescription(gif));
+        final GifDescription gif = (GifDescription) intent.getSerializableExtra(GIF_DESCRIPTION_EXTRA);
 
-                shareViaSMS.setOnClickListener(view ->
-                                                       Sharing.shareViaSms(this,
-                                                                           gif));
+        if (gif == null) return;
 
-                copyToClipboard.setOnClickListener(view ->
-                                                           Sharing.copyToClipBoard(this,
-                                                                                   gif));
-            }
-        }
+        final SimpleDraweeView image = (SimpleDraweeView) findViewById(R.id.detailed_image);
+
+        image.setController(UiUtils.fromGifDescription(gif));
+
+        // init share via sms button
+        findViewById(R.id.share_via_sms)
+            .setOnClickListener(view ->
+                                Sharing.shareViaSms(this,
+                                                    gif));
+
+        // init copy to clipboard button
+        findViewById(R.id.copy_to_clipboard)
+            .setOnClickListener(view ->
+                                Sharing.copyToClipBoard(this,
+                                                        gif));
+
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        final int id = item.getItemId();
 
         if (id == android.R.id.home) {
             onBackPressed();

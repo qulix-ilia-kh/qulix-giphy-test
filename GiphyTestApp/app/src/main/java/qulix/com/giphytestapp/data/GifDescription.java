@@ -2,6 +2,9 @@ package qulix.com.giphytestapp.data;
 
 import java.io.Serializable;
 
+/**
+ * This class represents one gif
+ */
 public final class GifDescription implements Serializable {
 
     public GifDescription(final String url) {
@@ -10,15 +13,17 @@ public final class GifDescription implements Serializable {
         mUrl = url;
     }
 
+    // get url of this gif
     public String url() {
         return mUrl;
     }
 
-    private final String mUrl;
-
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "GifDescription{" +
             "mUrl = " + mUrl +
             "}";
     }
+
+    private final String mUrl;
 }

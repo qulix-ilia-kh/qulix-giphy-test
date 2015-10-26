@@ -2,7 +2,7 @@ package qulix.com.giphytestapp.ui.screens;
 
 import android.os.Bundle;
 
-public class MainActivity extends SearchBaseActivity {
+public final class MainActivity extends SearchBaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

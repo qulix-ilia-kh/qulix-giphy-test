@@ -21,34 +21,44 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+/**
+ * Class representing access to the api.
+ */
 public final class Api {
 
-    private final Scheduler mIOScheduler = Schedulers.io();
-    private final OkHttpClient mClient;
 
+    // endpoint urls
+    private static final String TRENDING_GIFS_API_ENDPOINT = "http://api.giphy.com/v1/gifs/trending";
+    private static final String SEARCH_GIFS_ENDPOINT = "http://api.giphy.com/v1/gifs/search";
+
+    // keys
     private static final String KEY_API_KEY = "api_key";
-    // api key from the giphy samples
-    private static final String VALUE_API_KEY = "dc6zaTOxFJmzC";
-
     private static final String KEY_QUERY = "q";
     private static final String KEY_LIMIT = "limit";
 
+    // how much search results to request
     private static final int SEARCH_RESULTS_TO_REQUEST = 50;
+    // api key from the giphy samples
+    private static final String VALUE_API_KEY = "dc6zaTOxFJmzC";
 
+    // scheduler for server io
+    private final Scheduler mIOScheduler = Schedulers.io();
 
-    private static final String TRENDING_GIFS_API_ENDPOINT = "http://api.giphy.com/v1/gifs/trending";
-    private static final String SEARCH_GIFS_ENDPOINT = "http://api.giphy.com/v1/gifs/search";
+    // http client to use
+    private final OkHttpClient mClient;
 
     public Api(final OkHttpClient client) {
         mClient = client;
     }
 
+    // get observable for trending gifs
     public Observable<GifDescription> trendingGifs() {
         return execute(url(TRENDING_GIFS_API_ENDPOINT),
                        GifsResponse.class)
             .flatMap(Api::toDescriptions);
     }
 
+    // get observable for search results basing on term
     public Observable<GifDescription> search(final String term) {
         return execute(url(SEARCH_GIFS_ENDPOINT)
                        .newBuilder()
@@ -59,12 +69,14 @@ public final class Api {
             .flatMap(Api::toDescriptions);
     }
 
+    // extract gifs from GifResponse
     private static Observable<GifDescription> toDescriptions(final GifsResponse response) {
         return Observable
             .from(response.data())
             .map(entry -> new GifDescription(entry.image().url()));
     }
 
+    // format url from endpoint
     private HttpUrl url(final String s) {
         return HttpUrl
             .parse(s)
@@ -74,6 +86,7 @@ public final class Api {
 
     }
 
+    // get result observable from the url
     private final <T> Observable<T> execute(final HttpUrl url,
                                             final Class<T> expectedClass) {
         return Observable.<String>create(subscriber -> {

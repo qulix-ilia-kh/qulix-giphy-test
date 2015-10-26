@@ -16,6 +16,7 @@ import qulix.com.giphytestapp.api.Api;
 
 public final class GiphyTestApplication extends Application {
 
+    // configuration constants that used for cache
     private static final int MAX_HEAP_SIZE = (int) Runtime.getRuntime().maxMemory();
     private static final int MAX_DISK_CACHE_SIZE = 40 * ByteConstants.MB;
     private static final int MAX_MEMORY_CACHE_SIZE = MAX_HEAP_SIZE / 4;
@@ -39,14 +40,22 @@ public final class GiphyTestApplication extends Application {
         mApi = new Api(okHttpClient);
     }
 
-    private void initFresco(final OkHttpClient okHttpClient) {
+    // this method allows access to the application class avoiding class cast
+    public static GiphyTestApplication instance() {
+        return sInstance;
+    }
 
+    public Api api() {
+        return mApi;
+    }
+
+    private void initFresco(final OkHttpClient okHttpClient) {
         final MemoryCacheParams bitmapCacheParams
             = new MemoryCacheParams(MAX_MEMORY_CACHE_SIZE, // Max total size of elements in the cache
-                                    Integer.MAX_VALUE,                     // Max entries in the cache
+                                    Integer.MAX_VALUE,     // Max entries in the cache
                                     MAX_MEMORY_CACHE_SIZE, // Max total size of elements in eviction queue
-                                    Integer.MAX_VALUE,                     // Max length of eviction queue
-                                    Integer.MAX_VALUE);                    // Max cache entry size
+                                    Integer.MAX_VALUE,     // Max length of eviction queue
+                                    Integer.MAX_VALUE);    // Max cache entry size
 
         final ImagePipelineConfig config
             = OkHttpImagePipelineConfigFactory
@@ -64,14 +73,6 @@ public final class GiphyTestApplication extends Application {
             .build();
 
         Fresco.initialize(this, config);
-    }
-
-    public static GiphyTestApplication instance() {
-        return sInstance;
-    }
-
-    public Api api() {
-        return mApi;
     }
 
 }
