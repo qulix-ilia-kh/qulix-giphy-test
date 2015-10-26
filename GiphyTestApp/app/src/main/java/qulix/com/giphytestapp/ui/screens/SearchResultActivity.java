@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-public class SearchResultActivity extends SearchBaseActivity {
+public final class SearchResultActivity extends SearchBaseActivity {
 
     private static final String QUERY_KEY = "query key";
 

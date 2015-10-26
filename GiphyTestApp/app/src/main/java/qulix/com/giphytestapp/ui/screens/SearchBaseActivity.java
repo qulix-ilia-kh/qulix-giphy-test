@@ -24,8 +24,9 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
 
     private static final String STORED_QUERY_KEY = "stored query key";
 
-    final List<GifDescription> mDataSet = new ArrayList<>();
-    protected final GifListAdapter mAdapter = new GifListAdapter(mDataSet, this::onSelected);
+    private final List<GifDescription> mDataSet = new ArrayList<>();
+    private final GifListAdapter mAdapter = new GifListAdapter(mDataSet, this::onSelected);
+
     private Subscription mCurrentSubscription;
     private String mQuery = "";
     private SearchView mSearchView;
@@ -48,7 +49,7 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
+    public final boolean onCreateOptionsMenu(final Menu menu) {
         final MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_activity_menu, menu);
 
@@ -72,29 +73,29 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
             mSearchView.setQuery(mQuery, false);
             mSearchView.setIconified(false);
         }
-        
+
         return true;
     }
 
     @Override
-    protected void onDestroy() {
+    protected final void onDestroy() {
         super.onDestroy();
         unsubscribeCurrent();
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
+    protected final void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mSearchView != null) {
             outState.putString(STORED_QUERY_KEY, mSearchView.getQuery().toString());
         }
     }
 
-    protected Api giphyApi() {
+    protected final Api giphyApi() {
         return GiphyTestApplication.instance().api();
     }
 
-    protected void displayGifsFromObservable(final Observable<GifDescription> observable) {
+    protected final void displayGifsFromObservable(final Observable<GifDescription> observable) {
         unsubscribeCurrent();
         mCurrentSubscription = observable
                 .toList()
@@ -102,21 +103,21 @@ public abstract class SearchBaseActivity extends AppCompatActivity {
                            SearchBaseActivity.this::notifyRequestError);
     }
 
-    protected void unsubscribeCurrent() {
+    private void unsubscribeCurrent() {
         unsubscribe(mCurrentSubscription);
     }
 
-    protected void unsubscribe(final Subscription subscription) {
+    private void unsubscribe(final Subscription subscription) {
         if (subscription != null) {
             subscription.unsubscribe();
         }
     }
 
-    protected void notifyRequestError(final Throwable error) {
+    private void notifyRequestError(final Throwable error) {
         Toast.makeText(SearchBaseActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
     }
 
-    protected void onSelected(final GifDescription preview) {
+    private void onSelected(final GifDescription preview) {
         startActivity(DetailsActivity.intent(this, preview));
     }
 
